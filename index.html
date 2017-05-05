@@ -1,19 +1,9 @@
 <!DOCTYPE html>
-<html style="background-color: gray">
-<style>
-</style>
+<html style="background-color: black">
+
 <script>    
 
-    function stateClicked(node) {
-        var code = node.getAttribute("code");
-        var name = node.getAttribute("name");
-        console.log(code);
-        console.log(name);
-        document.getElementById("selectedState").innerHTML = name;
-    }
-
     window.onload = function loadStateInfo(file, callback) {   
-
         var file = "states.json";
         var xhr = new XMLHttpRequest();
         xhr.overrideMimeType("application/json");
@@ -22,22 +12,38 @@
             if (xhr.readyState == 4 && xhr.status == "200") {
                 var stateInfo = JSON.parse(xhr.responseText);
                 setStateAreas(stateInfo);
-                console.log(stateInfo);
             }
         };
         xhr.send(null);  
     }
 
+    function stateClicked(node) {
+        var code = node.getAttribute("code");
+        var name = node.getAttribute("name");
+        document.getElementById("selectedState").innerHTML = name;
+    }
 
     function setStateAreas(stateInfo) {
         areaMap = "";
         stateInfo.forEach(function(state) {
             areaMap += "<area name=\"" + state.name + "\" code=\"" 
                 + state.code + "\" coords=\"" + state.coords 
-                + "\" shape=\"poly\" onClick=\"stateClicked(this)\">\n";
+                + "\" shape=\"poly\" onClick=\"stateClicked(this)\""
+                + "onMouseOver=\"hoverOn(this);\" onMouseOut=\"hoverOff();\">\n";
         }, this);
-        console.log()
         document.getElementById("statesMap").innerHTML = areaMap;
+    }
+
+    function hoverOn(node) {
+        var code = node.getAttribute("code");
+        var imgFile = code + "_hover.png";
+        var stateOverlay = document.getElementById("stateOverlay")
+        stateOverlay.src = "images/" + imgFile;
+    }
+
+    function hoverOff() {
+        var stateOverlay = document.getElementById("stateOverlay")
+        stateOverlay.src = "";
     }
 
 </script>
@@ -48,9 +54,10 @@
 </head>
 
 <body>
-    <div align="center">
-        <h3 id="selectedState" style="color: blue">No State Selected</h3>
-        <img src="images/states.png" usemap="#statesMap">
+    <div id="mapDiv" align="center" >
+        <h3 id="selectedState" style="color: orange">Click a State</h3>
+        <img id="stateOverlay" src="" usemap="#statesMap" style="position: absolute">
+        <img id="mapImg" src="images/states.png" usemap="#statesMap">
         <map id="statesMap" name="statesMap">
         </map>
     </div>
