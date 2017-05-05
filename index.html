@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html style="background-color: gray">
+<script>
+    //var statesFile = require('./states.json');
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'states.json', true);
+    xhr.onreadystatechange = function() {
+        console.log(xhr.response);
+    } 
+
+    function stateClicked(node) {
+        var code = node.getAttribute("code");
+        var name = node.getAttribute("name");
+        console.log(code);
+        console.log(name);
+        document.getElementById("selectedState").innerHTML = name;
+    }
+</script>
+
+<head>
+    <title>Clickable Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div>
+        <h3 id="selectedState" style="text-align: center" style="color: blue">No State Selected</h3>
+        <img src="images/states.png" usemap="#statesMap">
+        <map id="statesMap" name="statesMap">
+            <area shape="poly" onClick="stateClicked(this);" code="wy" name="Wyoming" coords="208,145, 206,159, 290,168, 292,136, 293,136, 292,136, 294,104, 242,99, 242,99, 215,95, 215,96, 208,145, 208,14">
+        </map>
+    </div>
+</body>
+
+</html>
